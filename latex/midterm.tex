@@ -86,7 +86,10 @@ This project explores the intersection of computer vision, machine learning, and
 \centering
 	\includegraphics[width=10cm]{taiwanese-hand-sign-clip-art-600nw-2462483897.png}
 	\caption{Taiwanese Hand Counting System}
+	\label{fig:taiwanese_hand_counting}
 \end{figure}
+
+Figure \ref{fig:taiwanese_hand_counting} illustrates the Taiwanese hand counting system, showcasing the specific finger configurations used to represent numbers from 1 to 10. This visual reference is essential for understanding the gesture recognition requirements of the project.
 
 \section{System Design \& Architecture}
 
@@ -98,15 +101,18 @@ The application uses an event-driven architecture powered by Qt's timer mechanis
 
 \subsection{Key Components}
 
-\textbf{Video Capture Module:} Utilizes OpenCV's VideoCapture class to interface with the webcam. The module captures frames at the native camera resolution and applies horizontal flipping to create a mirror effect, making the interaction more intuitive for users.
+\begin{itemize}
+	\item \textbf{Video Capture Module:} Utilizes OpenCV's VideoCapture class to interface with the webcam. The module captures frames at the native camera resolution and applies horizontal flipping to create a mirror effect, making the interaction more intuitive for users.
 
-\textbf{Hand Detection Engine:} Powered by Google's MediaPipe Hands solution, this component detects up to 2 hands in each frame and identifies 21 landmark points per hand. The landmarks include finger tips, joints, and palm positions. The detection confidence threshold is set to 0.7 to balance accuracy and performance.
+\item \textbf{Hand Detection Engine:} Powered by Google's MediaPipe Hands solution, this component detects up to 2 hands in each frame and identifies 21 landmark points per hand. The landmarks include finger tips, joints, and palm positions. The detection confidence threshold is set to 0.7 to balance accuracy and performance.
 
-\textbf{Gesture Recognition Algorithm:} Implements custom logic to analyze hand landmarks and determine which fingers are extended. The algorithm distinguishes between thumbs (using horizontal position) and other fingers (using vertical position). It then matches the finger configuration against predefined patterns for Taiwanese numbers 1-10.
+\item \textbf{Gesture Recognition Algorithm:} Implements custom logic to analyze hand landmarks and determine which fingers are extended. The algorithm distinguishes between thumbs (using horizontal position) and other fingers (using vertical position). It then matches the finger configuration against predefined patterns for Taiwanese numbers 1-10.
 
-\textbf{GUI Framework:} Built with PyQt6, the interface displays the processed video feed with overlaid hand landmarks, detected numbers, and performance metrics. The layout is simple and clean, focusing user attention on the video feed and recognition results.
+\item \textbf{GUI Framework:} Built with PyQt6, the interface displays the processed video feed with overlaid hand landmarks, detected numbers, and performance metrics. The layout is simple and clean, focusing user attention on the video feed and recognition results.
 
-\textbf{Performance Monitoring System:} Tracks frame processing times to calculate real-time FPS. Maintains a circular buffer of the last 300 FPS measurements (10 seconds at 30 FPS) and renders a live chart showing FPS trends over time.
+\item \textbf{Performance Monitoring System:} Tracks frame processing times to calculate real-time FPS. Maintains a circular buffer of the last 300 FPS measurements (10 seconds at 30 FPS) and renders a live chart showing FPS trends over time.
+
+\end{itemize}
 
 \subsection{Algorithm \& Data Flow}
 
@@ -174,13 +180,19 @@ For finger extension detection, the algorithm uses different strategies for diff
 	\centering
 	\includegraphics[width=12cm]{ui.png}
 	\caption{Main Application UI}
+	\label{fig:main_ui}
 \end{figure}
+
+Figure \ref{fig:main_ui} shows the main application user interface during operation. The video feed displays detected hand landmarks overlaid on the live camera input, along with the recognized Taiwanese number displayed prominently. The FPS information is shown in the top-right corner, and the performance chart is rendered on top of the video feed.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=12cm]{resource_utilization.png}
 	\caption{Resource Utilization (CPU \& Memory)}
+	\label{fig:resource_utilization}
 \end{figure}
+
+Figure \ref{fig:resource_utilization} illustrates the CPU and memory usage during application operation. The CPU usage peaks around 60-70\% on a single core, while memory consumption remains stable between 250-300 MB.
 
 \begin{table}[H]
 \centering
@@ -204,13 +216,17 @@ Table \ref{tab:performance_metrics} summarizes the key performance metrics obser
 
 The experimental results demonstrate that the system successfully achieves its primary objective of real-time Taiwanese hand counting recognition. The performance metrics indicate that the system maintains acceptable frame rates (15-30 FPS) while providing accurate gesture recognition.
 
-\textbf{Performance Analysis:} The variation in FPS (15-30) can be attributed to the computational overhead of hand detection. When no hands are present in the frame, MediaPipe processes frames faster, resulting in higher FPS. When one or two hands are detected, the additional processing required for landmark detection and tracking reduces the frame rate. This behavior is expected and acceptable for real-time applications.
+\begin{itemize}
 
-\textbf{Resource Efficiency:} The single-core CPU usage of 60-70\% demonstrates efficient use of system resources. The application does not fully saturate the CPU, leaving headroom for other system processes. Memory consumption remains stable at 250-300 MB, indicating no memory leaks and efficient buffer management in the FPS history tracking system.
+\item \textbf{Performance Analysis:} The variation in FPS (15-30) can be attributed to the computational overhead of hand detection. When no hands are present in the frame, MediaPipe processes frames faster, resulting in higher FPS. When one or two hands are detected, the additional processing required for landmark detection and tracking reduces the frame rate. This behavior is expected and acceptable for real-time applications.
 
-\textbf{Accuracy Observations:} Hand landmark detection accuracy was consistently high when using proper lighting conditions and when hands were clearly visible to the camera. The iPhone 15 Pro Max camera provided superior results compared to the built-in FaceTime camera, likely due to higher resolution and better image quality. The gesture recognition algorithm successfully distinguished between different Taiwanese counting patterns with minimal false positives.
+\item \textbf{Resource Efficiency:} The single-core CPU usage of 60-70\% demonstrates efficient use of system resources. The application does not fully saturate the CPU, leaving headroom for other system processes. Memory consumption remains stable at 250-300 MB, indicating no memory leaks and efficient buffer management in the FPS history tracking system.
 
-\textbf{Latency Considerations:} The 33-66 ms processing latency per frame is well within acceptable bounds for interactive applications. Users perceive the system as responsive, with immediate visual feedback when changing hand gestures. The FPS chart visualization helps identify performance trends and potential bottlenecks during operation.
+\item \textbf{Accuracy Observations:} Hand landmark detection accuracy was consistently high when using proper lighting conditions and when hands were clearly visible to the camera. The iPhone 15 Pro Max camera provided superior results compared to the built-in FaceTime camera, likely due to higher resolution and better image quality. The gesture recognition algorithm successfully distinguished between different Taiwanese counting patterns with minimal false positives.
+
+\item \textbf{Latency Considerations:} The 33-66 ms processing latency per frame is well within acceptable bounds for interactive applications. Users perceive the system as responsive, with immediate visual feedback when changing hand gestures. The FPS chart visualization helps identify performance trends and potential bottlenecks during operation.
+
+\end{itemize}
 
 \subsection{Challenges and Solutions}
 
@@ -246,19 +262,23 @@ The implementation of the real-time FPS chart also presented challenges, particu
 
 This project significantly enhanced several technical competencies:
 
-\textbf{Computer Vision:} Gained practical experience with MediaPipe's hand tracking technology, understanding how landmark detection works and how to interpret 3D hand models in 2D space.
+\begin{itemize}
+	
+\item \textbf{Computer Vision:} Gained practical experience with MediaPipe's hand tracking technology, understanding how landmark detection works and how to interpret 3D hand models in 2D space.
 
-\textbf{Real-time Processing:} Developed skills in optimizing code for real-time performance, including frame rate management, buffer optimization, and efficient data structure selection.
+\item \textbf{Real-time Processing:} Developed skills in optimizing code for real-time performance, including frame rate management, buffer optimization, and efficient data structure selection.
 
-\textbf{GUI Development:} Improved proficiency with PyQt6, learning how to integrate video processing with interactive interfaces and how to use Qt's event loop for smooth animations.
+\item \textbf{GUI Development:} Improved proficiency with PyQt6, learning how to integrate video processing with interactive interfaces and how to use Qt's event loop for smooth animations.
 
-\textbf{Algorithm Design:} Enhanced ability to design pattern matching algorithms and implement state machines for gesture recognition.
+\item \textbf{Algorithm Design:} Enhanced ability to design pattern matching algorithms and implement state machines for gesture recognition.
 
-\textbf{Performance Monitoring:} Learned to implement comprehensive performance tracking systems with visualization capabilities.
+\item \textbf{Performance Monitoring:} Learned to implement comprehensive performance tracking systems with visualization capabilities.
 
-\textbf{Cross-platform Development:} Gained experience handling platform-specific issues and dependency management in Python environments.
+\item \textbf{Cross-platform Development:} Gained experience handling platform-specific issues and dependency management in Python environments.
 
-\textbf{Problem Solving:} Improved debugging skills, particularly in identifying and resolving issues related to coordinate systems, timing, and algorithm logic.
+\item \textbf{Problem Solving:} Improved debugging skills, particularly in identifying and resolving issues related to coordinate systems, timing, and algorithm logic.
+
+\end{itemize}
 
 \section{Conclusion \& Future Work}
 
@@ -276,25 +296,27 @@ The modular architecture and clean code structure make the system easily extensi
 
 Several enhancements could further improve the system's capabilities and user experience:
 
-\textbf{Gesture Set Expansion:} Extend recognition to other cultural counting systems (Chinese, Japanese, Korean) and create a multi-cultural gesture recognition platform with language selection.
+\begin{itemize}
+	\item \textbf{Gesture Set Expansion:} Extend recognition to other cultural counting systems (Chinese, Japanese, Korean) and create a multi-cultural gesture recognition platform with language selection.
 
-\textbf{Machine Learning Enhancement:} Implement custom trained models to improve accuracy and reduce false positives. Consider using neural networks for gesture classification instead of rule-based pattern matching.
+\item \textbf{Machine Learning Enhancement:} Implement custom trained models to improve accuracy and reduce false positives. Consider using neural networks for gesture classification instead of rule-based pattern matching.
 
-\textbf{Multi-threading Optimization:} Separate video capture, processing, and rendering into different threads to maximize performance and potentially achieve higher frame rates.
+\item \textbf{Multi-threading Optimization:} Separate video capture, processing, and rendering into different threads to maximize performance and potentially achieve higher frame rates.
 
-\textbf{Educational Features:} Add tutorial mode with step-by-step instructions for learning Taiwanese counting. Include practice exercises with scoring and feedback.
+\item \textbf{Educational Features:} Add tutorial mode with step-by-step instructions for learning Taiwanese counting. Include practice exercises with scoring and feedback.
 
-\textbf{Recording Capabilities:} Implement video recording functionality to capture and save gesture demonstrations for educational or documentation purposes.
+\item \textbf{Recording Capabilities:} Implement video recording functionality to capture and save gesture demonstrations for educational or documentation purposes.
 
-\textbf{Gesture History:} Add a timeline showing the sequence of detected gestures, useful for creating number sequences or basic arithmetic demonstrations.
+\item \textbf{Gesture History:} Add a timeline showing the sequence of detected gestures, useful for creating number sequences or basic arithmetic demonstrations.
 
-\textbf{Mobile Platform Port:} Adapt the application for iOS and Android using frameworks like Kivy or Flutter to make it accessible on smartphones and tablets.
+\item \textbf{Mobile Platform Port:} Adapt the application for iOS and Android using frameworks like Kivy or Flutter to make it accessible on smartphones and tablets.
 
-\textbf{Accessibility Improvements:} Add audio feedback for detected numbers to assist visually impaired users. Implement text-to-speech for gesture names and instructions.
+\item \textbf{Accessibility Improvements:} Add audio feedback for detected numbers to assist visually impaired users. Implement text-to-speech for gesture names and instructions.
 
-\textbf{Performance Optimization:} Investigate GPU acceleration for MediaPipe processing. Implement adaptive quality settings that adjust detection parameters based on available system resources.
+\item \textbf{Performance Optimization:} Investigate GPU acceleration for MediaPipe processing. Implement adaptive quality settings that adjust detection parameters based on available system resources.
 
-\textbf{Enhanced Analytics:} Provide detailed statistics on recognition accuracy, common errors, and usage patterns to help users improve their gesture performance.
+\item \textbf{Enhanced Analytics:} Provide detailed statistics on recognition accuracy, common errors, and usage patterns to help users improve their gesture performance.
+\end{itemize}
 
 
 
