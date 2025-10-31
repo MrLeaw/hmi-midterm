@@ -41,11 +41,14 @@ class HandDetectionApp(QMainWindow):
         height = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
         print(f"Camera resolution: {width} x {height}")
 
-        # FPS tracking
+        # FPS tracking (5-second sliding window)
         self.prev_frame_time = 0
         self.fps = 0
-        self.fps_history = deque(maxlen=300)  # Store last 10 seconds at 30fps
-        self.fps_times = deque(maxlen=300)  # Store timestamps
+        # Store FPS samples and timestamps in deques for efficient sliding-window ops
+        self.fps_history = deque()
+        self.fps_times = deque()
+        # sliding window length in seconds
+        self.fps_window_seconds = 5.0
 
         self.setup_ui()
 
@@ -205,8 +208,15 @@ class HandDetectionApp(QMainWindow):
         current_frame_time = time.time()
         if self.prev_frame_time != 0:
             self.fps = 1 / (current_frame_time - self.prev_frame_time)
+            # Append sample and prune to keep only last N seconds
             self.fps_history.append(self.fps)
             self.fps_times.append(current_frame_time)
+
+            # prune older samples outside the sliding window
+            cutoff = current_frame_time - self.fps_window_seconds
+            while self.fps_times and self.fps_times[0] < cutoff:
+                self.fps_times.popleft()
+                self.fps_history.popleft()
         self.prev_frame_time = current_frame_time
 
         # Flip the frame horizontally for a mirror effect
@@ -294,9 +304,15 @@ class HandDetectionApp(QMainWindow):
 
         # Display FPS
         h, w, c = rgb_frame.shape
+        # Display average FPS over the sliding window (last N seconds)
+        if len(self.fps_history) > 0:
+            avg_fps = sum(self.fps_history) / len(self.fps_history)
+        else:
+            avg_fps = self.fps
+
         cv2.putText(
             rgb_frame,
-            f"FPS: {int(self.fps)}",
+            f"FPS: {int(avg_fps)}",
             (w - 150, 40),
             cv2.FONT_HERSHEY_SIMPLEX,
             1,
